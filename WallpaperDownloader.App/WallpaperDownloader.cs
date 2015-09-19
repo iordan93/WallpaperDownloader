@@ -72,12 +72,11 @@
             }
 
             Console.Write("Please type the end page ({0}-{1}): ", startPage, maxPage);
+            endPage = int.Parse(Console.ReadLine());
             if (endPage < startPage || endPage > maxPage)
             {
                 throw new ArgumentOutOfRangeException("endPage");
             }
-
-            endPage = int.Parse(Console.ReadLine());
         }
 
         private static void DownloadImages()
