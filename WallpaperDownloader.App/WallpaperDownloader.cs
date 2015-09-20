@@ -2,13 +2,13 @@
 {
     using System;
     using System.IO;
-    using System.Net;
-    using OpenQA.Selenium;
-    using OpenQA.Selenium.Firefox;
-    using OpenQA.Selenium.Chrome;
-    using OpenQA.Selenium.Interactions;
     using System.Linq;
+    using System.Net;
     using System.Threading;
+    using OpenQA.Selenium;
+    using OpenQA.Selenium.Chrome;
+    using OpenQA.Selenium.Firefox;
+    using OpenQA.Selenium.Interactions;
 
     public class WallpaperDownloader
     {
