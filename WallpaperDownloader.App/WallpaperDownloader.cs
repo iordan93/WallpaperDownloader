@@ -13,6 +13,7 @@
     public class WallpaperDownloader
     {
         public const string WallpapersDirectory = "../../Wallpapers";
+        public const string DriversDirectory = "../../Drivers";
         public const int DefaultDownloadTimeout = 1000;
         public static readonly string[] TemporaryFileExtensions = new[] { "*.part", "*.tmp", "*.crdownload" };
 
@@ -68,9 +69,10 @@
 
         private static void SetupChromeBrowser()
         {
+            var service = ChromeDriverService.CreateDefaultService(Path.GetFullPath(DriversDirectory));
             var options = new ChromeOptions();
             options.AddUserProfilePreference("download.default_directory", Path.GetFullPath(WallpapersDirectory));
-            browser = new ChromeDriver(options);
+            browser = new ChromeDriver(service, options);
         }
 
         private static string SelectCategory(IWebDriver browser)
@@ -85,27 +87,24 @@
             Console.Write("Selected category number: ");
             int selectedCategoryIndex = int.Parse(Console.ReadLine()) - 1;
             string categoryLink = categories[selectedCategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
+            string imagesInCategoryCount = categories[selectedCategoryIndex].FindElement(By.TagName("small")).Text;
             browser.Navigate().GoToUrl(categoryLink);
-            Console.WriteLine("Do you want see subcategories chooose a subcategory?");
-            Console.WriteLine("1.Yes{0}2.No", Environment.NewLine);
-            int wantSubcategoriesNumberChoose = int.Parse(Console.ReadLine());
-            if (wantSubcategoriesNumberChoose == 1)
-            {
-                var subcategories = browser.FindElements(By.CssSelector(@".side-panel.categories > li[style=""padding-left:5px;""]"));
-                if (subcategories.Any())
-                {
-                    Console.WriteLine("Please choose a subcategory:");
-                    for (int i = 1; i <= subcategories.Count; i++)
-                    {
-                        Console.WriteLine("{0}. {1}", i, subcategories[i - 1].Text);
-                    }
 
-                    int selectedSubcategoryIndex = int.Parse(Console.ReadLine()) - 1;
-                    categoryLink = subcategories[selectedSubcategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
-                }
-                else
+            var subcategories = browser.FindElements(By.CssSelector(".side-panel.categories > li[style=\"padding-left:5px;\"]"));
+            if (subcategories.Any())
+            {
+                Console.WriteLine("Please choose a subcategory:");
+                Console.WriteLine("0. All {0}", imagesInCategoryCount);
+                for (int i = 1; i <= subcategories.Count; i++)
                 {
-                    Console.WriteLine("Sorry this category don't have subcategories.");
+                    Console.WriteLine("{0}. {1}", i, subcategories[i - 1].Text);
+                }
+
+                Console.Write("Selected subcategory number: ");
+                int selectedSubcategoryIndex = int.Parse(Console.ReadLine()) - 1;
+                if (selectedSubcategoryIndex >= 0)
+                {
+                    categoryLink = subcategories[selectedSubcategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
                 }
             }
 
