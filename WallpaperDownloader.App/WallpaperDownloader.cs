@@ -7,10 +7,14 @@
     using OpenQA.Selenium.Firefox;
     using OpenQA.Selenium.Chrome;
     using OpenQA.Selenium.Interactions;
+    using System.Linq;
+    using System.Threading;
 
     public class WallpaperDownloader
     {
         public const string WallpapersDirectory = "../../Wallpapers";
+        public const int DefaultDownloadTimeout = 1000;
+        public static readonly string[] TemporaryFileExtensions = new[] { "*.part", "*.tmp" };
 
         private static IWebDriver browser;
         private static WebClient client = new WebClient();
@@ -28,6 +32,7 @@
             string categoryLink = SelectCategory(browser);
             SelectPages(categoryLink);
             DownloadImages();
+            EnsureDownloadsHaveFinished();
             browser.Quit();
         }
 
@@ -151,6 +156,20 @@
                 // It's OK, just skip the image
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Image skipped");
+            }
+        }
+
+        private static void EnsureDownloadsHaveFinished()
+        {
+            while (true)
+            {
+                 var files = TemporaryFileExtensions.SelectMany(extension => Directory.GetFiles(WallpapersDirectory, extension));
+                if (!files.Any())
+                {
+                    break;
+                }
+
+                Thread.Sleep(DefaultDownloadTimeout);
             }
         }
     }
