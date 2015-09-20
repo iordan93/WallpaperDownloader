@@ -14,7 +14,7 @@
     {
         public const string WallpapersDirectory = "../../Wallpapers";
         public const int DefaultDownloadTimeout = 1000;
-        public static readonly string[] TemporaryFileExtensions = new[] { "*.part", "*.tmp" };
+        public static readonly string[] TemporaryFileExtensions = new[] { "*.part", "*.tmp", "*.crdownload" };
 
         private static IWebDriver browser;
         private static WebClient client = new WebClient();
@@ -85,6 +85,30 @@
             Console.Write("Selected category number: ");
             int selectedCategoryIndex = int.Parse(Console.ReadLine()) - 1;
             string categoryLink = categories[selectedCategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
+            browser.Navigate().GoToUrl(categoryLink);
+            Console.WriteLine("Do you want see subcategories chooose a subcategory?");
+            Console.WriteLine("1.Yes{0}2.No", Environment.NewLine);
+            int wantSubcategoriesNumberChoose = int.Parse(Console.ReadLine());
+            if (wantSubcategoriesNumberChoose == 1)
+            {
+                var subcategories = browser.FindElements(By.CssSelector(@".side-panel.categories > li[style=""padding-left:5px;""]"));
+                if (subcategories.Any())
+                {
+                    Console.WriteLine("Please choose a subcategory:");
+                    for (int i = 1; i <= subcategories.Count; i++)
+                    {
+                        Console.WriteLine("{0}. {1}", i, subcategories[i - 1].Text);
+                    }
+
+                    int selectedSubcategoryIndex = int.Parse(Console.ReadLine()) - 1;
+                    categoryLink = subcategories[selectedSubcategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
+                }
+                else
+                {
+                    Console.WriteLine("Sorry this category don't have subcategories.");
+                }
+            }
+
             return categoryLink;
         }
 
@@ -163,7 +187,7 @@
         {
             while (true)
             {
-                 var files = TemporaryFileExtensions.SelectMany(extension => Directory.GetFiles(WallpapersDirectory, extension));
+                var files = TemporaryFileExtensions.SelectMany(extension => Directory.GetFiles(WallpapersDirectory, extension));
                 if (!files.Any())
                 {
                     break;
