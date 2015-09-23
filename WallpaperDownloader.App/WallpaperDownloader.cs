@@ -20,7 +20,6 @@
         private static IWebDriver browser;
         private static WebClient client = new WebClient();
 
-        private static string baseUrl;
         private static int startPage;
         private static int endPage;
 
@@ -30,16 +29,36 @@
             browser.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
 
             browser.Navigate().GoToUrl("http://wallpaperswide.com/");
-            string categoryLink = SelectCategory(browser);
-            SelectPages(categoryLink);
-            DownloadImages();
+
+            Console.WriteLine("Download from a category or search by a given term?{0}1. Category{0}2. Search", Environment.NewLine);
+            int downloadTypeChoice = int.Parse(Console.ReadLine());
+
+            string baseUrl = string.Empty;
+            string searchTerm = string.Empty;
+            switch (downloadTypeChoice)
+            {
+                case 1:
+                    string categoryLink = SelectCategory(browser);
+                    baseUrl = SelectPages(categoryLink, null);
+                    break;
+                case 2:
+                    Console.Write("Search for: ");
+                    searchTerm = Console.ReadLine();
+                    baseUrl = SelectPages("http://wallpaperswide.com/search.html", searchTerm);
+                    break;
+                default:
+                    Console.WriteLine("Your download type choice is invalid.");
+                    break;
+            }
+
+            DownloadImages(baseUrl, searchTerm);
             EnsureDownloadsHaveFinished();
             browser.Quit();
         }
 
         private static void SetupBrowser()
         {
-            Console.WriteLine("Select a browser to use:{0}1. Mozilla Firefox{0}2. Google Chrome", Environment.NewLine + "  ");
+            Console.WriteLine("Select a browser to use:{0}1. Mozilla Firefox{0}2. Google Chrome", Environment.NewLine);
             int browserChoice = int.Parse(Console.ReadLine());
             switch (browserChoice)
             {
@@ -111,12 +130,21 @@
             return categoryLink;
         }
 
-        private static void SelectPages(string categoryLink)
+        // TODO: Overloaded methods?
+        // TODO: Link / Url -> rename to be consistent
+        private static string SelectPages(string categoryLink, string searchTerm)
         {
-            browser.Navigate().GoToUrl(categoryLink);
+            string downloadLink = categoryLink;
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                // TODO: Extract method
+                downloadLink += "?q=" + WebUtility.UrlEncode(searchTerm);
+            }
+
+            browser.Navigate().GoToUrl(downloadLink);
             var lastPageElement = browser.FindElement(By.CssSelector(".pagination:last-of-type > a:nth-last-child(2)"));
             string lastPageUrl = lastPageElement.GetAttribute("href");
-            baseUrl = lastPageUrl.Substring(0, lastPageUrl.LastIndexOf("/") + 1);
+            string baseDownloadUrl = lastPageUrl.Substring(0, lastPageUrl.LastIndexOf("/") + 1);
             string maxPageString = lastPageElement.Text;
             int maxPage = int.Parse(maxPageString);
 
@@ -133,14 +161,22 @@
             {
                 throw new ArgumentOutOfRangeException("endPage");
             }
+
+            return baseDownloadUrl;
         }
 
-        private static void DownloadImages()
+        private static void DownloadImages(string baseUrl, string searchTerm)
         {
             Console.Clear();
             for (int page = startPage; page <= endPage; page++)
             {
-                browser.Navigate().GoToUrl(baseUrl + page);
+                string downloadUrl = baseUrl + page;
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    downloadUrl += "?q=" + WebUtility.UrlEncode(searchTerm);
+                }
+
+                browser.Navigate().GoToUrl(downloadUrl);
                 var wallpaperPreviewsCount = browser.FindElements(By.CssSelector("li.wall img")).Count;
                 for (int currentIndex = 1; currentIndex <= wallpaperPreviewsCount; currentIndex++)
                 {
