@@ -1,4 +1,4 @@
-﻿namespace WallpaperDownloader.App
+﻿namespace WallpaperDownloader.App.Factories
 {
     using System;
     using System.IO;
@@ -24,7 +24,7 @@
                     throw new InvalidOperationException("The browser choice is invalid.");
             }
 
-            browser.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(5));
+            browser.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(Constants.DefaultImplicitBrowserTimeout));
             return browser;
         }
 

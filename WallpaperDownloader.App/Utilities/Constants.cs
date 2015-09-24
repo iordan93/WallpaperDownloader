@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const int DefaultDownloadTimeout = 1000;
+        public const int DefaultImplicitBrowserTimeout = 5;
 
         public const string WallpapersDirectory = "../../Wallpapers";
         public const string DriversDirectory = "../../Drivers";

@@ -48,9 +48,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrowserFactory.cs" />
+    <Compile Include="DownloadStrategies\CategoryDownloadStrategy.cs" />
+    <Compile Include="DownloadStrategies\SearchDownloadStrategy.cs" />
+    <Compile Include="Factories\BrowserFactory.cs" />
     <Compile Include="BrowserType.cs" />
     <Compile Include="DownloadEngine.cs" />
+    <Compile Include="DownloadStrategies\DownloadStrategy.cs" />
+    <Compile Include="DownloadStrategies\IDownloadStrategy.cs" />
+    <Compile Include="DownloadStrategyType.cs" />
+    <Compile Include="Factories\DownloadStrategyFactory.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="WallpaperDownloader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
