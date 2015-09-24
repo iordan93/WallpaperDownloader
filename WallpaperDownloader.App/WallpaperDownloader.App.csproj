@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownloadStrategies\CategoryDownloadStrategy.cs" />
+    <Compile Include="DownloadStrategies\TopWallpapersDownloadStrategy.cs" />
+    <Compile Include="DownloadStrategies\LatestWallpapersDownloadStrategy.cs" />
     <Compile Include="DownloadStrategies\SearchDownloadStrategy.cs" />
     <Compile Include="Factories\BrowserFactory.cs" />
     <Compile Include="BrowserType.cs" />

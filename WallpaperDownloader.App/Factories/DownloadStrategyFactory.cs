@@ -14,6 +14,10 @@
                     return new CategoryDownloadStrategy(browser);
                 case DownloadStrategyType.Search:
                     return new SearchDownloadStrategy(browser);
+                case DownloadStrategyType.LatestWallpapers:
+                    return new LatestWallpapersDownloadStrategy(browser);
+                case DownloadStrategyType.TopWallpapers:
+                    return new TopWallpapersDownloadStrategy(browser);
                 default:
                     throw new InvalidOperationException("The download strategy choice is invalid.");
             }

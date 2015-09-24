@@ -27,7 +27,21 @@
             this.CategoryUrl = categories[selectedCategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
             string imagesInCategoryCount = categories[selectedCategoryIndex].FindElement(By.TagName("small")).Text;
             this.Browser.Navigate().GoToUrl(this.CategoryUrl);
+            ChooseSubcategory(imagesInCategoryCount);
+        }
 
+        protected override string GetBaseDownloadUrl()
+        {
+            return this.CategoryUrl;
+        }
+
+        protected override string GetDownloadUrlForPage(int pageNumber)
+        {
+            return this.GetBaseDownloadUrl() + "/page/" + pageNumber;
+        }
+
+        private void ChooseSubcategory(string imagesInCategoryCount)
+        {
             var subcategories = this.Browser.FindElements(By.CssSelector(".side-panel.categories > li[style=\"padding-left:5px;\"]"));
             if (subcategories.Any())
             {
@@ -40,21 +54,12 @@
 
                 Console.Write("Selected subcategory number: ");
                 int selectedSubcategoryIndex = int.Parse(Console.ReadLine()) - 1;
-                if (selectedSubcategoryIndex >= 0)
+                if (selectedSubcategoryIndex >= 0 && selectedSubcategoryIndex < subcategories.Count)
                 {
                     this.CategoryUrl = subcategories[selectedSubcategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
                 }
             }
         }
 
-        protected override string GetBaseDownloadUrl()
-        {
-            return this.CategoryUrl;
-        }
-
-        protected override string GetDownloadUrlForPage(int pageNumber)
-        {
-            return this.GetBaseDownloadUrl() + "/page/" + pageNumber;
-        }
     }
 }

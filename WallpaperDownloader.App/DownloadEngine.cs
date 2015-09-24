@@ -15,7 +15,9 @@
 
         public void Run()
         {
-            Console.WriteLine("Select a browser to use:{0}1. Mozilla Firefox{0}2. Google Chrome", Environment.NewLine);
+            Console.WriteLine(
+                "Select a browser to use:{0}1. Mozilla Firefox{0}2. Google Chrome",
+                Environment.NewLine);
             Console.Write("Selected browser: ");
             int browserType = int.Parse(Console.ReadLine());
             this.Browser = BrowserFactory.GetBrowser((BrowserType)browserType);
@@ -23,7 +25,9 @@
 
             this.Browser.Navigate().GoToUrl(Constants.BaseSiteUrl);
 
-            Console.WriteLine("Select a download strategy:{0}1. Category{0}2. Search", Environment.NewLine);
+            Console.WriteLine(
+                "Select a download strategy:{0}1. Category{0}2. Search{0}3. Latest wallpapers{0}4. Top wallpapers",
+                Environment.NewLine);
             Console.Write("Selected strategy: ");
             int downloadStrategyType = int.Parse(Console.ReadLine());
             this.Strategy = DownloadStrategyFactory.GetStrategy((DownloadStrategyType)downloadStrategyType, this.Browser);
