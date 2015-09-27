@@ -27,7 +27,7 @@
             this.CategoryUrl = categories[selectedCategoryIndex].FindElement(By.TagName("a")).GetAttribute("href");
             string imagesInCategoryCount = categories[selectedCategoryIndex].FindElement(By.TagName("small")).Text;
             this.Browser.Navigate().GoToUrl(this.CategoryUrl);
-            ChooseSubcategory(imagesInCategoryCount);
+            this.ChooseSubcategory(imagesInCategoryCount);
         }
 
         protected override string GetBaseDownloadUrl()
@@ -60,6 +60,5 @@
                 }
             }
         }
-
     }
 }

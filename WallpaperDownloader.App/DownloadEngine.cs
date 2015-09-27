@@ -1,7 +1,6 @@
 ﻿namespace WallpaperDownloader.App
 {
     using System;
-    using System.Net;
     using DownloadStrategies;
     using Factories;
     using OpenQA.Selenium;
